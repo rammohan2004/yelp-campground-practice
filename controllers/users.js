@@ -26,13 +26,16 @@ module.exports.renderLogin = (req, res) => {
 
 module.exports.login = (req, res) => {
     req.flash('success', 'welcome back!');
-    const redirectUrl = req.session.returnTo || '/campgrounds';
-    delete req.session.returnTo;
+    const redirectUrl = res.locals.returnTo || '/campgrounds';
     res.redirect(redirectUrl);
 }
 
-module.exports.logout = (req, res) => {
-    req.logout();
-    req.flash('success', "Goodbye!");
-    res.redirect('/campgrounds');
+module.exports.logout = (req, res,next) => {
+        req.logout(function (err) {
+            if (err) {
+                return next(err);
+            }
+            req.flash('success', 'Goodbye!');
+            res.redirect('/campgrounds');
+        });
 }

@@ -24,6 +24,13 @@ const seedDB = async () => {
             author: '66a28ff5c1ae9ab9399c15df',
             location: `${cities[random1000].city}, ${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
+            geometry: {
+              type: "Point",
+              coordinates: [
+                  cities[random1000].longitude,
+                  cities[random1000].latitude,
+              ]
+          },
             images:[
                 {
                   url: 'https://res.cloudinary.com/dle2qaskm/image/upload/v1722180316/yelpCamp/anau87yz8fuhveib5r9f.jpg',
@@ -44,3 +51,6 @@ const seedDB = async () => {
 seedDB().then(() => {
     mongoose.connection.close();
 })
+
+
+

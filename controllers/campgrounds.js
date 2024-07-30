@@ -1,8 +1,5 @@
 
 const Campground = require('../models/campground');
-//const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-//const mapBoxToken = process.env.MAPBOX_TOKEN;
-//const geocoder = mbxGeocoding({ accessToken: mapBoxToken });
 const { cloudinary } = require("../cloudinary");
 const maptilerClient = require("@maptiler/client");
 maptilerClient.config.apiKey = process.env.MAPTILER_API_KEY;
@@ -23,7 +20,6 @@ campground.geometry = geoData.features[0].geometry;
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
     campground.author = req.user._id;
     await campground.save();
-    console.log(campground);
     req.flash('success', 'Successfully made a new campground!');
     res.redirect(`/campgrounds/${campground._id}`)
 }
@@ -38,7 +34,6 @@ module.exports.showCampground = async (req, res,) => {
         req.flash('error', 'Cannot find that campground!');
         return res.redirect('/campgrounds');
     }
-    console.log(campground.images);
     res.render('campgrounds/show', { campground });
 }
 
@@ -54,7 +49,6 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateCampground = async (req, res) => {
     const { id } = req.params;
-    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground });
     const geoData = await maptilerClient.geocoding.forward(req.body.campground.location, { limit: 1 });
 campground.geometry = geoData.features[0].geometry;
